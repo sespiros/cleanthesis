@@ -1,6 +1,8 @@
 # Clean Thesis
 *-- A Clean LaTeX Style for Thesis Documents --*
 
+**This is a fork of the original Clean Thesis template modified for use with Greek language and XeLaTeX**
+
 ## Table of contents
 
 * [About](#about)

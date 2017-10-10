@@ -62,6 +62,11 @@
 \define@boolkey[ct]{cthesis}{hangsubsection}[true]{}
 \setkeys[ct]{cthesis}{hangsubsection=true}
 
+% OPTION hangsubsubsection
+% --> values = true|false
+\define@boolkey[ct]{cthesis}{hangsubsubsection}[true]{}
+\setkeys[ct]{cthesis}{hangsubsubsection=true}
+
 % OPTION figuresep
 % --> values = none|colon|period|space|quad|endash
 \define@choicekey*[ct]{cthesis}{figuresep}{none,colon,period,space,quad,newline,endash}[endash]{\def\cthesis@figuresep{#1}}
@@ -80,7 +85,7 @@
 % OPTION bibsys
 % --> values = biber|bibtex
 \define@choicekey*[ct]{cthesis}{bibsys}[\val\bibsysnr]{biber,bibtex}[bibtex]{\def\cthesis@bibsys{#1}}
-\setkeys[ct]{cthesis}{bibsys=bibtex}
+\setkeys[ct]{cthesis}{bibsys=biber}
 
 % OPTION bibfile
 % --> values = file name of your bibtex file
@@ -209,27 +214,14 @@
 % **************************************************
 % Font Definitions (see http://www.tug.dk/FontCatalogue/)
 % **************************************************
-\RequirePackage[T1]{fontenc}		% font types and character verification
-%\ifthenelse{\boolean{@sansserif}}%
-\ifct@cthesis@sansserif
-%	{%
-		% Using sans-serif fonts
-		%
-		%\RequirePackage{helvet}	% Font:	Helvetica
-		%\RequirePackage{nimbus}	% Font:	Nimbus Sans, a clone of the Helvetica
-		\RequirePackage{tgheros}	% Font:	TEX Gyre Heros
-		%\RequirePackage{libertine}	% Font:	Biolinum, the standard sans serif typeface with the Libertine package
-		%\RequirePackage[scaled]{berasans} % Font:	Bera Sans, a a version of Bitstream Vera Sans slightly enhanced
-		\renewcommand*\familydefault{\sfdefault}%
-%	}{%
-\else
-		% Using serif fonts
-		%
-		\RequirePackage{lmodern}	% font set: Latin Modern
-		\RequirePackage{charter}	% font set: Charter
-		%\RequirePackage{fourier}	% font set: (basically improved utopia)
-%	}
-\fi
+\setmainfont[
+ BoldFont={Kerkisbold},
+ ItalicFont={Kerkisitalics},
+ BoldItalicFont={Kerkisbolditalic},
+ Mapping=tex-text
+ ]{Kerkis}
+\setsansfont[Scale=1.6]{KerkisSans}
+\setmonofont{FreeMono}
 
 % **************************************************
 % Load Packages
@@ -240,7 +232,7 @@
 \RequirePackage{tabularx}			% table features
 \RequirePackage{fancyhdr}			% for header and footer modifications
 \RequirePackage{enumitem}			% for simple list modifications
-\RequirePackage{blindtext}		% package for blind text
+\RequirePackage{blindtext}		    % package for blind text
 \RequirePackage{textcomp}			% different symbols
 \RequirePackage{hyperref} 			% interactive link inside the document
 
@@ -278,7 +270,7 @@
 %
 \RequirePackage[					% advanced quotes
 	strict=true,					% 	- warning are errors now
-	style=german					% 	- german quotes
+	style=greek						% 	- greek quotes
 ]{csquotes}
 %
 \RequirePackage[					% use biblatex for bibliography
@@ -299,10 +291,10 @@
 	mincitenames=1%
 ]{biblatex}
 \bibliography{\cthesis@bibfile}
-\DefineBibliographyStrings{ngerman}{%
+\DefineBibliographyStrings{english}{%
 	andothers = {{et\,al\adddot}}, % 'et al.' instead of 'u.a.'
-	backrefpage = {{zitiert auf Seite}},%
-	backrefpages = {{zitiert auf den Seiten}},%
+	backrefpage = {\lowercase{s}ee p.},%
+	backrefpages = {\lowercase{s}ee pp.},%
 }
 
 % **************************************************
@@ -437,53 +429,55 @@
 % New Commands
 % **************************************************
 % TODO command
-\definecolor{color_todo}{rgb}{.6,.8,.2}
+\definecolor{color_todo}{RGB}{220,40,40}
 \newcommand{\TODO}[1]{{\color{color_todo}\textbf{[TODO #1]}}}
 %
 %
 % ref commands, e.g. for images, tables and text labels
 % --------------------------------------------------
-% RESULT = (siehe Tab. 12.4)
-\newcommand{\tabref}[1]{(siehe Tab.~\ref{#1})}
+% RESULT = (δείτε Πίνακα. 12.4)
+\newcommand{\tabref}[1]{(δείτε Πίνακα.~\ref{#1})}
 %
-% RESULT = (siehe Tab. 12.4)
-\newcommand{\tableref}[1]{(siehe Tab.~\ref{#1} Seite~\pageref{#1})}
+% RESULT = (δείτε Πίνακα. 12.4)
+\newcommand{\tableref}[1]{(δείτε Πίνακα.~\ref{#1} Σελίδα~\pageref{#1})}
+%
+% RESULT = Πίνακα 10.4
+\newcommand{\tabreft}[1]{Πίνακα~\ref{#1}}
+% --------------------------------------------------
+% RESULT = (δείτε 3.4)
+\newcommand{\tref}[1]{(δείτε \ref{#1})}
+%
+% RESULT = Ενότητα 3.4
+\newcommand{\treft}[1]{Ενότητα~\ref{#1}}
+%
+% RESULT = (δείτε 3.4, Σελιδα 12)
+\newcommand{\textref}[1]{(δείτε \ref{#1}, Σελίδα~\pageref{#1})}
+%
+% RESULT = Ενότητα 3.4 (δείτε Σελίδα 12)
+\newcommand{\textreft}[1]{Ενότητα~\ref{#1} (δείτε σελίδα~\pageref{#1})}
 %
 % --------------------------------------------------
-% RESULT = (siehe 3.4)
-\newcommand{\tref}[1]{(siehe \ref{#1})}
+% RESULT = (δείτε Σχήμα. 10.4)
+\newcommand{\fref}[1]{(δείτε Σχήμα.~\ref{#1})}
 %
-% RESULT = Abschnitt 3.4
-\newcommand{\treft}[1]{Abschnitt~\ref{#1}}
+% RESULT = (δείτε Σχήμα. 10.4 b)
+\newcommand{\frefadd}[2]{(δείτε Σχήμα.~\ref{#1}~#2)}
 %
-% RESULT = (siehe 3.4, Seite 12)
-\newcommand{\textref}[1]{(siehe \ref{#1}, Seite~\pageref{#1})}
+% RESULT = (δείτε Σχήμα. 10.4, Σελίδα 12)
+\newcommand{\figref}[1]{(δείτε Σχήμα.~\ref{#1}, Σελίδα~\pageref{#1})}
 %
-% RESULT = Abschnitt 3.4 (siehe Seite 12)
-\newcommand{\textreft}[1]{Abschnitt~\ref{#1} (siehe Seite~\pageref{#1})}
+% RESULT = (δείτε Σχήμα. 10.4 b, Σελίδα 12)
+\newcommand{\figrefadd}[2]{(δείτε Σχήμα.~\ref{#1}~#2, Σελίδα~\pageref{#1})}
 %
-% --------------------------------------------------
-% RESULT = (siehe Abb. 10.4)
-\newcommand{\fref}[1]{(siehe Abb.~\ref{#1})}
+% RESULT = Σχήμα 10.4
+\newcommand{\figreft}[1]{Σχήμα~\ref{#1}}
 %
-% RESULT = (siehe Abb. 10.4 b)
-\newcommand{\frefadd}[2]{(siehe Abb.~\ref{#1}~#2)}
-%
-% RESULT = (siehe Abb. 10.4, Seite 12)
-\newcommand{\figref}[1]{(siehe Abb.~\ref{#1}, Seite~\pageref{#1})}
-%
-% RESULT = (siehe Abb. 10.4 b, Seite 12)
-\newcommand{\figrefadd}[2]{(siehe Abb.~\ref{#1}~#2, Seite~\pageref{#1})}
-%
-% RESULT = Abbildung 10.4
-\newcommand{\figreft}[1]{Abbildung~\ref{#1}}
-%
-% RESULT = Abbildung 10.4 b
-\newcommand{\figrefaddt}[2]{Abbildung~\ref{#1}~#2}
+% RESULT = Σχήμα 10.4 b
+\newcommand{\figrefaddt}[2]{Σχήμα~\ref{#1}~#2}
 %
 % --------------------------------------------------
-% RESULT = (siehe Seite 12)
-\newcommand{\seepage}[1]{(siehe Seite~\pageref{#1})}
+% RESULT = (δείτε Σελίδα 12)
+\newcommand{\seepage}[1]{(δείτε Σελίδα~\pageref{#1})}
 
 
 % **************************************************
@@ -495,13 +489,13 @@
 }
 
 % own font definitions
-\newcommand{\helv}{\fontfamily{phv}\fontsize{9}{11}\selectfont}
-\newcommand{\book}{\fontfamily{pbk}\fontseries{m}\fontsize{11}{13}\selectfont}
-\newcommand{\tgherosfont}{\fontfamily{qhv}\selectfont}
+%\newcommand{\helv}{\fontfamily{phv}\fontsize{9}{11}\selectfont}
+%\newcommand{\book}{\fontfamily{pbk}\fontseries{m}\fontsize{11}{13}\selectfont}
+\newcommand{\tgherosfont}{\sffamily\selectfont}
 
-\newcommand{\thesispartlabelfont}{\color{ctcolorpartnum}\book\fontsize{60}{60}\selectfont}
+\newcommand{\thesispartlabelfont}{\color{ctcolorpartnum}\tgherosfont\fontsize{60}{60}\selectfont}
 \newcommand{\thesispartfont}{\color{ctcolorparttext}\huge \tgherosfont\selectfont}
-\newcommand{\thesischapterfont}{\color{ctcolorblack}\huge \fontfamily{phv}\selectfont}
+\newcommand{\thesischapterfont}{\color{ctcolorblack}\huge \tgherosfont \selectfont}
 %\newcommand{\thesissectionfont}{\color{ctcolormain}\LARGE\bfseries \tgherosfont}
 \newcommand{\thesissectionfont}{\color{ctcolorsection}\LARGE \tgherosfont}
 \newcommand{\thesissubsectionfont}{\color{ctcolorsubsection}\Large \tgherosfont}
@@ -564,7 +558,7 @@
 %
 \titleformat{\chapter}[display]%
 	{\usekomafont{chapter}}%
-	{\vspace{-8em}\raggedleft{%
+	{\vspace{-5em}\raggedleft{%
 		{\color{ctcolorchapterline}%
 			\rule[-5pt]{2pt}{5cm}}\quad%
 		{\color{ctcolorchapternum}
@@ -619,6 +613,28 @@
 %	}
 \fi
 %
+% > formats: \subsubsection
+\titlespacing{\subsubsection}{0em}{.5em}{0em}%[0pt]
+%\ifthenelse{\boolean{@subsectionlabeloutside}}%
+\ifct@cthesis@hangsubsubsection
+%	{%
+		\titleformat{\subsubsection}[hang]%
+			{\usekomafont{subsubsection}}%
+			{\color{ctcolorblack}\thesubsubsection\hspace*{10pt}}%
+			{0pt}%
+			{\raggedright}%
+			[\phantomsection]
+%	}{%
+\else
+		\titleformat{\subsubsection}[block]%
+			{\usekomafont{subsubsection}}%
+			{\color{ctcolorblack}\thesubsubsection\hspace*{10pt}}%
+			{0pt}%
+			{\raggedright}%
+			[\phantomsection]
+%	}
+\fi
+%
 % > formats: \paragraph
 \titlespacing{\paragraph}{0pt}{\parsep}{1em}%[0pt]
 % \titleformat{\paragraph}[runin]%
@@ -641,7 +657,8 @@
 % table of contents, list of figures and list of tables
 \RequirePackage{tocloft}
 % - fixes wrong fonts in the toc, thanks to magnucki
-\renewcommand{\cftchapfont}{\usefont{T1}{bch}{b}{n}\selectfont}
+%\renewcommand{\cftchapfont}{\usefont{T1}{bch}{b}{n}\selectfont}
+\renewcommand{\cftchapfont}{\sffamily\selectfont}
 \renewcommand{\cfttoctitlefont}{\thesischapterfont}
 \renewcommand{\cftloftitlefont}{\thesischapterfont}
 \renewcommand{\cftlottitlefont}{\thesischapterfont}
@@ -661,7 +678,7 @@
 %
 % Clean chapter quotations
 \newcommand{\hugequote}{%
-	{\book\fontsize{75}{80}\selectfont%
+	{\tgherosfont\fontsize{75}{80}\selectfont%
 	\hspace*{-.475em}\color{ctcolorgraylight}%
 	\textit{\glqq}%
 	\vskip -.26em}%
